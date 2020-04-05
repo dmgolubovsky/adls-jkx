@@ -38,9 +38,12 @@ run dpkg -i kxstudio-repos_10.0.3_all.deb
 
 run apt-fast -y update
 
-run env DEBIAN_FRONTEND=noninteractive apt-fast -y install kxstudio-meta-all kxstudio-meta-audio-applications \
+run env DEBIAN_FRONTEND=noninteractive apt-fast -y install kxstudio-meta-all \
+                        kxstudio-meta-audio-applications guitarix-lv2 avw.lv2 ir.lv2 lv2vocoder \
                         kxstudio-meta-audio-plugins kxstudio-meta-audio-plugins-collection \
-                        ardour vim alsa-utils zita-ajbridge zenity
+                        ardour vim alsa-utils zita-ajbridge zenity mda-lv2 padthv1-lv2 samplv1-lv2 \
+                        so-synth-lv2 swh-lv2 synthv1-lv2 whysynth wsynth-dssi xsynth-dssi phasex \
+                        iem-plugin-suite-vst 
 
 run rm -rf /install-kx
 
