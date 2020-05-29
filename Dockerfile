@@ -33,34 +33,26 @@ run apt-fast install -y libpangomm-1.4-dev liblrdf0-dev libsamplerate0-dev
 run apt-fast install -y libserd-dev libsord-dev libsratom-dev liblilv-dev
 run apt-fast install -y libgtkmm-2.4-dev libsuil-dev libjack-jackd2-dev libcwiid-dev
 
-run apt-fast install -y wget curl
+run apt-fast install -y wget curl git
 
 run mkdir /build-ardour
 workdir /build-ardour
-run wget http://archive.ubuntu.com/ubuntu/pool/universe/a/ardour/ardour_5.12.0-3.dsc
-run wget http://archive.ubuntu.com/ubuntu/pool/universe/a/ardour/ardour_5.12.0.orig.tar.bz2
-run wget http://archive.ubuntu.com/ubuntu/pool/universe/a/ardour/ardour_5.12.0-3.debian.tar.xz
 
-run dpkg-source -x ardour_5.12.0-3.dsc
+run git clone https://github.com/Ardour/ardour.git
 
-workdir /tmp
-run curl https://waf.io/waf-1.6.11.tar.bz2 | tar xj
-workdir waf-1.6.11
+workdir ardour
 
-run patch -p1 < /build-ardour/ardour-5.12.0/tools/waflib.patch
-run ./waf-light -v --make-waf --tools=misc,doxygen,/build-ardour/ardour-5.12.0/tools/autowaf.py --prelude=''
-run cp ./waf /build-ardour/ardour-5.12.0/waf
+run git checkout 6.0
 
-workdir /build-ardour/ardour-5.12.0
-run ./waf configure --no-phone-home --with-backend=alsa,jack
-run ./waf build -j4
+workdir /build-ardour/ardour
+run ./waf configure --no-phone-home --with-backend=alsa,jack --optimize --ptformat --cxx11
+run ./waf build -j 4
 run ./waf install
 run apt-fast install -y chrpath rsync unzip
 run ln -sf /bin/false /usr/bin/curl
 workdir tools/linux_packaging
 run ./build --public --strip some
 run ./package --public --singlearch
-
 
 # Final assembly. Pull all parts together.
 
@@ -77,28 +69,33 @@ run echo "APT::Install-Suggests \"false\";" >> /etc/apt/apt.conf
 
 run mkdir -p /install-ardour
 workdir /install-ardour
-copy --from=ardour /build-ardour/ardour-5.12.0/tools/linux_packaging/Ardour-5.12.0-dbg-x86_64.tar .
-run tar xvf Ardour-5.12.0-dbg-x86_64.tar
-workdir Ardour-5.12.0-dbg-x86_64
+copy --from=ardour /build-ardour/ardour/tools/linux_packaging/Ardour-6.0.0-x86_64.tar .
+run tar xvf Ardour-6.0.0-x86_64.tar
+workdir Ardour-6.0.0-x86_64
 
 # Install some libs that were not picked by bundlers - mainly X11 related.
 
 run apt -y install gtk2-engines-pixbuf libxfixes3 libxinerama1 libxi6 libxrandr2 libxcursor1 libsuil-0-0
 run apt -y install libxcomposite1 libxdamage1 liblzo2-2 libkeyutils1 libasound2 libgl1 libusb-1.0-0
+run apt -y install libglibmm-2.4-1v5 libsamplerate0 libsndfile1 libfftw3-single3 libvamp-sdk2v5 \
+                   libvamp-hostsdk3v5
+run apt -y install liblo7 libaubio5 liblilv-0-0 libtag1v5-vanilla libpangomm-1.4-1v5 libcairomm-1.0-1v5
+run apt -y install libgtkmm-2.4-1v5 libcurl3-gnutls libarchive13 liblrdf0 librubberband2 libcwiid1
 
 # First time it will fail because one library was not copied properly.
 
-run ./.stage2.run || true
+run echo -ne "n\nn\nn\nn\nn\nn\nn\nn\n" | env NOABICHECK=1 ./.stage2.run
+#run env NOABICHECK=1 ./.stage2.run || true
 
 # Copy the missing libraries
 
-run cp /usr/lib/x86_64-linux-gnu/gtk-2.0/2.10.0/engines/libpixmap.so Ardour_x86_64-5.12.0-dbg/lib
-run cp /usr/lib/x86_64-linux-gnu/suil-0/libsuil_x11_in_gtk2.so Ardour_x86_64-5.12.0-dbg/lib
-run cp /usr/lib/x86_64-linux-gnu/suil-0/libsuil_qt5_in_gtk2.so Ardour_x86_64-5.12.0-dbg/lib
+run cp /usr/lib/x86_64-linux-gnu/gtk-2.0/2.10.0/engines/libpixmap.so /opt/Ardour-6.0.0/lib
+run cp /usr/lib/x86_64-linux-gnu/suil-0/libsuil_x11_in_gtk2.so /opt/Ardour-6.0.0/lib
+run cp /usr/lib/x86_64-linux-gnu/suil-0/libsuil_qt5_in_gtk2.so /opt/Ardour-6.0.0/lib
 
 # It will ask questions, say no.
 
-run echo -ne "n\nn\nn\nn\nn\n" | ./.stage2.run
+#run echo -ne "n\nn\nn\nn\nn\nn\nn\nn\n" | env NOABICHECK=1 ./.stage2.run
 
 # Delete the unpacked bundle
 
