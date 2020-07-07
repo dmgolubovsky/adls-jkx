@@ -122,9 +122,35 @@ run env DEBIAN_FRONTEND=noninteractive apt-fast -y install kxstudio-meta-all a2j
                         vim alsa-utils zita-ajbridge zenity mda-lv2 padthv1-lv2 samplv1-lv2 \
                         so-synth-lv2 swh-lv2 synthv1-lv2 whysynth wsynth-dssi xsynth-dssi phasex \
                         iem-plugin-suite-vst hydrogen-drumkits hydrogen-data qmidiarp guitarix-common \
-                        luppp 
+                        aj-snapshot amsynth
 
 run rm -rf /install-kx
+
+# Build SooperLooper from git
+
+from ardour as sl
+
+run env DEBIAN_FRONTEND=noninteractive apt-get install -y git build-essential libjack-jackd2-dev \
+        libtool-bin libwxgtk3.0-gtk3-dev libncurses-dev
+run mkdir /build-sl /install-sl
+workdir /build-sl
+run git clone https://github.com/essej/sooperlooper.git
+workdir sooperlooper
+run git checkout v1_7_4
+run bash autogen.sh
+run ./configure --prefix=/usr
+run make
+run make install DESTDIR=/install-sl
+
+# Install sooperlooper
+
+from adls as adls-sl
+
+copy --from=sl /install-sl /
+
+run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends -y \
+        liblo7 libwxgtk3.0-gtk3-0v5 libsigc++-2.0-0v5 libsamplerate0 libasound2 libfftw3-double3 \
+        librubberband2 libsndfile1 drumkv1 audacity
 
 # Finally clean up
 
@@ -141,5 +167,5 @@ copy .qmidiarprc /root
 
 from scratch
 
-copy --from=adls / /
+copy --from=adls-sl / /
 
