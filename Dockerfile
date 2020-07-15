@@ -150,7 +150,9 @@ copy --from=sl /install-sl /
 
 run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends -y \
         liblo7 libwxgtk3.0-gtk3-0v5 libsigc++-2.0-0v5 libsamplerate0 libasound2 libfftw3-double3 \
-        librubberband2 libsndfile1 drumkv1 audacity i3 xterm
+        librubberband2 libsndfile1 drumkv1 audacity i3 xterm locales
+
+run locale-gen en_US.UTF-8
 
 # Finally clean up
 
