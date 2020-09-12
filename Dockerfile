@@ -126,6 +126,39 @@ run env DEBIAN_FRONTEND=noninteractive apt-fast -y install kxstudio-meta-all a2j
 
 run rm -rf /install-kx
 
+# Build Musescore 3.5 from git
+
+from base-ubuntu as mscore
+
+run env DEBIAN_FRONTEND=noninteractive apt-fast -y install cmake qtbase5-dev qtwebengine5-dev qttools5-dev \
+                        libqt5svg5-dev libqt5xmlpatterns5-dev qtquickcontrols2-5-dev lame libmp3lame-dev \
+                        libqt5webenginecore5 qt5-default git
+
+workdir /bld_mscore
+
+run git clone https://github.com/musescore/MuseScore.git
+
+workdir MuseScore
+
+run git checkout v3.5
+
+run env DEBIAN_FRONTEND=noninteractive apt-fast -y install g++ libasound2-dev libjack-jackd2-dev libsndfile1-dev \
+                        zlib1g-dev
+
+workdir my-build-dir
+
+run sed -i 's/QuickTemplates2/\#QuickTemplates2/g' ../build/FindQt5.cmake
+
+
+run cmake .. -DCMAKE_INSTALL_PREFIX=/install-mscore -DBUILD_PULSEAUDIO=OFF -DBUILD_PORTAUDIO=OFF \
+             -DBUILD_TELEMETRY_MODULE=OFF -DBUILD_LAME=OFF
+
+run cmake -j4 --build . 
+
+run cmake --build . --target install
+
+run ls -l /install-mscore
+
 # Build SooperLooper from git
 
 from ardour as sl
@@ -148,10 +181,11 @@ from adls as adls-sl
 
 copy --from=sl /install-sl /
 
+copy --from=mscore /install-mscore /usr/local
+
 run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends -y \
         liblo7 libwxgtk3.0-gtk3-0v5 libsigc++-2.0-0v5 libsamplerate0 libasound2 libfftw3-double3 \
-        librubberband2 libsndfile1 drumkv1 audacity i3 xterm locales i3status suckless-tools \
-        less j4-dmenu-desktop luppp
+        librubberband2 libsndfile1 drumkv1 audacity locales less
 
 run locale-gen en_US.UTF-8
 
