@@ -185,7 +185,8 @@ copy --from=mscore /install-mscore /usr/local
 
 run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends -y \
         liblo7 libwxgtk3.0-gtk3-0v5 libsigc++-2.0-0v5 libsamplerate0 libasound2 libfftw3-double3 \
-        librubberband2 libsndfile1 drumkv1 audacity locales less
+        librubberband2 libsndfile1 drumkv1 audacity locales less libqt5webenginewidgets5 \
+        libqt5xmlpatterns5 libqt5webenginecore5 libqt5quick5 libqt5qml5
 
 run locale-gen en_US.UTF-8
 
