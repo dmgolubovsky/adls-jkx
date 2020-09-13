@@ -157,6 +157,8 @@ run cmake -j4 --build .
 
 run cmake --build . --target install
 
+run rm /install-mscore/share/mscore-3.5/sound/MuseScore_General.sf3
+
 run ls -l /install-mscore
 
 # Build SooperLooper from git
