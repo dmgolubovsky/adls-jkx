@@ -132,7 +132,7 @@ from base-ubuntu as mscore
 
 run env DEBIAN_FRONTEND=noninteractive apt-fast -y install cmake qtbase5-dev qtwebengine5-dev qttools5-dev \
                         libqt5svg5-dev libqt5xmlpatterns5-dev qtquickcontrols2-5-dev lame libmp3lame-dev \
-                        libqt5webenginecore5 qt5-default git
+                        libqt5webenginecore5 qt5-default git qml-module-qtgraphicaleffects qml-module-qtquick-controls 
 
 workdir /bld_mscore
 
@@ -145,7 +145,12 @@ run git checkout v3.5
 run env DEBIAN_FRONTEND=noninteractive apt-fast -y install g++ libasound2-dev libjack-jackd2-dev libsndfile1-dev \
                         zlib1g-dev
 
+
 workdir my-build-dir
+
+# run grep -r "import QtQuick.Controls" ..
+
+# run for f in `grep -lr "import QtQuick.Controls" ..` ; do sed -i 's/import QtQuick.Controls 2\.1/import QtQuick.Controls 2\.0/g' $f ; done
 
 run sed -i 's/QuickTemplates2/\#QuickTemplates2/g' ../build/FindQt5.cmake
 
@@ -188,7 +193,8 @@ copy --from=mscore /install-mscore /usr/local
 run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends -y \
         liblo7 libwxgtk3.0-gtk3-0v5 libsigc++-2.0-0v5 libsamplerate0 libasound2 libfftw3-double3 \
         librubberband2 libsndfile1 drumkv1 audacity locales less libqt5webenginewidgets5 \
-        libqt5xmlpatterns5 libqt5webenginecore5 libqt5quick5 libqt5qml5
+        libqt5xmlpatterns5 libqt5webenginecore5 libqt5quick5 libqt5qml5 libqt5quickcontrols2-5 \
+        libqt5quicktemplates2-5 libqt5quickwidgets5 qml-module-qtgraphicaleffects qml-module-qtquick-controls
 
 run locale-gen en_US.UTF-8
 
