@@ -166,6 +166,23 @@ run rm /install-mscore/share/mscore-3.5/sound/MuseScore_General.sf3
 
 run ls -l /install-mscore
 
+# Build espeak from git
+
+from base-ubuntu as bld-espeak
+
+run apt-fast install -y autoconf automake libtool make libsonic-dev git
+
+workdir /src
+run git clone https://github.com/espeak-ng/espeak-ng.git
+workdir espeak-ng
+run git checkout 1.50
+run ./autogen.sh
+run ./configure --prefix=/usr/local
+run make
+run mkdir /install-espeak
+run env DESTDIR=/install-espeak make install
+run ls -l /install-espeak/usr/local
+
 # Build SooperLooper from git
 
 from ardour as sl
@@ -190,9 +207,11 @@ copy --from=sl /install-sl /
 
 copy --from=mscore /install-mscore /usr/local
 
+copy --from=bld-espeak /install-espeak/usr/local /usr/local
+
 run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends -y \
         liblo7 libwxgtk3.0-gtk3-0v5 libsigc++-2.0-0v5 libsamplerate0 libasound2 libfftw3-double3 \
-        librubberband2 libsndfile1 drumkv1 audacity locales less libqt5webenginewidgets5 \
+        librubberband2 libsndfile1 drumkv1 audacity locales less libsonic0 libqt5webenginewidgets5 \
         libqt5xmlpatterns5 libqt5webenginecore5 libqt5quick5 libqt5qml5 libqt5quickcontrols2-5 \
         libqt5quicktemplates2-5 libqt5quickwidgets5 qml-module-qtgraphicaleffects qml-module-qtquick-controls
 
