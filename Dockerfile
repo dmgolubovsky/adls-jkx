@@ -183,6 +183,28 @@ run mkdir /install-espeak
 run env DESTDIR=/install-espeak make install
 run ls -l /install-espeak/usr/local
 
+# Install Haskell Stack
+
+from base-ubuntu as stack
+
+run apt-fast install -y wget
+run wget -qO- https://get.haskellstack.org/ | sed 's/apt-get/apt-fast/g' | sh
+run stack update
+run stack upgrade
+
+# Build hsespeak
+
+from stack as hsespeak
+
+workdir /src
+run git clone https://github.com/dmgolubovsky/hsespeak.git
+workdir hsespeak
+run stack build --only-dependencies
+run stack install
+run mkdir -p /espvs/bin
+run cp /root/.local/bin/lyrvoc /espvs/bin
+
+
 # Build SooperLooper from git
 
 from ardour as sl
@@ -208,6 +230,8 @@ copy --from=sl /install-sl /
 copy --from=mscore /install-mscore /usr/local
 
 copy --from=bld-espeak /install-espeak/usr/local /usr/local
+
+copy --from=hsespeak /espvs/bin /usr/local/bin
 
 run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends -y \
         liblo7 libwxgtk3.0-gtk3-0v5 libsigc++-2.0-0v5 libsamplerate0 libasound2 libfftw3-double3 \
