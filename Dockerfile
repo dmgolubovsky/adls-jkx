@@ -143,7 +143,7 @@ workdir MuseScore
 run git checkout v3.5
 
 run env DEBIAN_FRONTEND=noninteractive apt-fast -y install g++ libasound2-dev libjack-jackd2-dev libsndfile1-dev \
-                        zlib1g-dev
+                        zlib1g-dev portaudio19-dev
 
 
 workdir my-build-dir
@@ -155,7 +155,7 @@ workdir my-build-dir
 run sed -i 's/QuickTemplates2/\#QuickTemplates2/g' ../build/FindQt5.cmake
 
 
-run cmake .. -DCMAKE_INSTALL_PREFIX=/install-mscore -DBUILD_PULSEAUDIO=OFF -DBUILD_PORTAUDIO=OFF \
+run cmake .. -DCMAKE_INSTALL_PREFIX=/install-mscore -DBUILD_PULSEAUDIO=OFF \
              -DBUILD_TELEMETRY_MODULE=OFF -DBUILD_LAME=OFF
 
 run cmake -j4 --build . 
@@ -233,7 +233,7 @@ copy --from=bld-espeak /install-espeak/usr/local /usr/local
 
 copy --from=hsespeak /espvs/bin /usr/local/bin
 
-run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends -y \
+run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends -y libportaudio2 \
         liblo7 libwxgtk3.0-gtk3-0v5 libsigc++-2.0-0v5 libsamplerate0 libasound2 libfftw3-double3 \
         librubberband2 libsndfile1 drumkv1 audacity locales less libsonic0 libqt5webenginewidgets5 \
         libqt5xmlpatterns5 libqt5webenginecore5 libqt5quick5 libqt5qml5 libqt5quickcontrols2-5 \
