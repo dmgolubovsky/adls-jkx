@@ -143,7 +143,7 @@ workdir MuseScore
 run git checkout v3.5
 
 run env DEBIAN_FRONTEND=noninteractive apt-fast -y install g++ libasound2-dev libjack-jackd2-dev libsndfile1-dev \
-                        zlib1g-dev portaudio19-dev
+                        zlib1g-dev portaudio19-dev libportmidi-dev
 
 
 workdir my-build-dir
@@ -233,7 +233,7 @@ copy --from=bld-espeak /install-espeak/usr/local /usr/local
 
 copy --from=hsespeak /espvs/bin /usr/local/bin
 
-run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends -y libportaudio2 \
+run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends -y libportaudio2 libportmidi0 \
         liblo7 libwxgtk3.0-gtk3-0v5 libsigc++-2.0-0v5 libsamplerate0 libasound2 libfftw3-double3 \
         librubberband2 libsndfile1 drumkv1 audacity locales less libsonic0 libqt5webenginewidgets5 \
         libqt5xmlpatterns5 libqt5webenginecore5 libqt5quick5 libqt5qml5 libqt5quickcontrols2-5 \
