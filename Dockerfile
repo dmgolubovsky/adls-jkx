@@ -140,7 +140,7 @@ run git clone https://github.com/musescore/MuseScore.git
 
 workdir MuseScore
 
-run git checkout v3.5
+run git checkout v3.5.2
 
 run env DEBIAN_FRONTEND=noninteractive apt-fast -y install g++ libasound2-dev libjack-jackd2-dev libsndfile1-dev \
                         zlib1g-dev portaudio19-dev libportmidi-dev
