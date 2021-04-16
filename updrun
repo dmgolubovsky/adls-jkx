@@ -1,0 +1,3 @@
+#! /bin/bash
+
+cat usrbin/score2xml | docker exec -i adls_jkx tee /usr/bin/score2xml
