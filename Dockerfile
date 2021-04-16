@@ -126,6 +126,32 @@ run env DEBIAN_FRONTEND=noninteractive apt-fast -y install kxstudio-meta-all a2j
 
 run rm -rf /install-kx
 
+# Build Vital synth from git
+
+from base-ubuntu as vital
+
+run env DEBIAN_FRONTEND=noninteractive apt-fast -y install git make gcc pkg-config libasound-dev libfreetype6-dev \
+                        libcurl4-openssl-dev libgl-dev libjack-jackd2-dev libxinerama-dev libxcursor-dev \
+                        libsecret-1-dev libglib2.0-dev
+
+workdir /inst_vital
+
+workdir /bld_vital
+
+run git clone https://github.com/mtytel/vital.git
+
+workdir vital
+
+run make DESTDIR=/inst_vital lv2
+
+run mv plugin/builds/linux_lv2/Vial.lv2 plugin/builds/linux_lv2/Vital.lv2
+
+run ls -l plugin/builds/linux_lv2/Vital.lv2
+
+run make DESTDIR=/inst_vital install_lv2
+
+run ls -lR /inst_vital/
+
 # Build Musescore 3.5 from git
 
 from base-ubuntu as mscore
@@ -228,11 +254,13 @@ copy --from=bld-espeak /install-espeak/usr/local /usr/local
 
 copy --from=hsespeak /espvs/bin /usr/local/bin
 
+copy --from=vital /inst_vital /
+
 run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends -y libportaudio2 libportmidi0 \
         liblo7 libwxgtk3.0-gtk3-0v5 libsigc++-2.0-0v5 libsamplerate0 libasound2 libfftw3-double3 \
         librubberband2 libsndfile1 drumkv1 audacity locales less libsonic0 libqt5webenginewidgets5 \
         libqt5xmlpatterns5 libqt5webenginecore5 libqt5quick5 libqt5qml5 libqt5quickcontrols2-5 \
-        libqt5quicktemplates2-5 libqt5quickwidgets5 qml-module-qtgraphicaleffects qml-module-qtquick-controls
+        libqt5quicktemplates2-5 libqt5quickwidgets5 qml-module-qtgraphicaleffects qml-module-qtquick-controls libcurl4
 
 run locale-gen en_US.UTF-8
 
