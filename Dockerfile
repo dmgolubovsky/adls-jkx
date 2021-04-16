@@ -264,8 +264,6 @@ run env DEBIAN_FRONTEND=noninteractive apt-fast install --no-install-recommends 
 
 run locale-gen en_US.UTF-8
 
-run env DEBIAN_FRONTEND=noninteractive apt-fast -y install sox
-
 # Finally clean up
 
 run apt-fast clean
@@ -278,8 +276,6 @@ run rm -rf /var/lib/log
 run rm -rf /var/cache
 run rm -rf /tmp/*
 copy .qmidiarprc /root
-
-add usrbin /usr/bin
 
 from scratch
 
