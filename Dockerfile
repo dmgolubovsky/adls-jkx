@@ -42,7 +42,7 @@ run git clone https://github.com/Ardour/ardour.git
 
 workdir ardour
 
-run git checkout 6.7
+run git checkout 6.8
 
 workdir /build-ardour/ardour
 run ./waf configure --no-phone-home --with-backend=alsa,jack --optimize --ptformat --cxx11
@@ -69,9 +69,9 @@ run echo "APT::Install-Suggests \"false\";" >> /etc/apt/apt.conf
 
 run mkdir -p /install-ardour
 workdir /install-ardour
-copy --from=ardour /build-ardour/ardour/tools/linux_packaging/Ardour-6.7.0-x86_64.tar .
-run tar xvf Ardour-6.7.0-x86_64.tar
-workdir Ardour-6.7.0-x86_64
+copy --from=ardour /build-ardour/ardour/tools/linux_packaging/Ardour-6.8.0-x86_64.tar .
+run tar xvf Ardour-6.8.0-x86_64.tar
+workdir Ardour-6.8.0-x86_64
 
 # Install some libs that were not picked by bundlers - mainly X11 related.
 
@@ -89,9 +89,9 @@ run echo -ne "n\nn\nn\nn\nn\nn\nn\nn\n" | env NOABICHECK=1 ./.stage2.run
 
 # Copy the missing libraries
 
-run cp /usr/lib/x86_64-linux-gnu/gtk-2.0/2.10.0/engines/libpixmap.so /opt/Ardour-6.7.0/lib
-run cp /usr/lib/x86_64-linux-gnu/suil-0/libsuil_x11_in_gtk2.so /opt/Ardour-6.7.0/lib
-run cp /usr/lib/x86_64-linux-gnu/suil-0/libsuil_qt5_in_gtk2.so /opt/Ardour-6.7.0/lib
+run cp /usr/lib/x86_64-linux-gnu/gtk-2.0/2.10.0/engines/libpixmap.so /opt/Ardour-6.8.0/lib
+run cp /usr/lib/x86_64-linux-gnu/suil-0/libsuil_x11_in_gtk2.so /opt/Ardour-6.8.0/lib
+run cp /usr/lib/x86_64-linux-gnu/suil-0/libsuil_qt5_in_gtk2.so /opt/Ardour-6.8.0/lib
 
 # It will ask questions, say no.
 
