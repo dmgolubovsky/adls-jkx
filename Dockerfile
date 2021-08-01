@@ -28,7 +28,7 @@ from base-ubuntu as ardour
 run apt-fast install -y libboost-dev libasound2-dev libglibmm-2.4-dev libsndfile1-dev
 run apt-fast install -y libcurl4-gnutls-dev libarchive-dev liblo-dev libtag-extras-dev
 run apt-fast install -y vamp-plugin-sdk librubberband-dev libudev-dev libnfft3-dev
-run apt-fast install -y libaubio-dev libxml2-dev libusb-1.0-0-dev
+run apt-fast install -y libaubio-dev libxml2-dev libusb-1.0-0-dev libreadline-dev
 run apt-fast install -y libpangomm-1.4-dev liblrdf0-dev libsamplerate0-dev
 run apt-fast install -y libserd-dev libsord-dev libsratom-dev liblilv-dev
 run apt-fast install -y libgtkmm-2.4-dev libsuil-dev libjack-jackd2-dev libcwiid-dev
