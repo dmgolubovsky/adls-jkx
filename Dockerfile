@@ -45,7 +45,7 @@ workdir ardour
 run git checkout 6.8
 
 workdir /build-ardour/ardour
-run ./waf configure --no-phone-home --with-backend=alsa,jack --optimize --ptformat --cxx11
+run ./waf configure --no-phone-home --with-backend=alsa,jack --optimize --ptformat --cxx11 --luadoc
 run ./waf build -j 4
 run ./waf install
 run apt-fast install -y chrpath rsync unzip
